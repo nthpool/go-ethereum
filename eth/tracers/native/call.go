@@ -46,6 +46,7 @@ type callFrame struct {
 	From         common.Address  `json:"from"`
 	Gas          uint64          `json:"gas"`
 	GasUsed      uint64          `json:"gasUsed"`
+	RequiredGas  uint64          `json:"requiredGas" rlp:"optional"`
 	To           *common.Address `json:"to,omitempty" rlp:"optional"`
 	Input        []byte          `json:"input" rlp:"optional"`
 	Output       []byte          `json:"output,omitempty" rlp:"optional"`
@@ -143,6 +144,8 @@ func (t *callTracer) CaptureStart(env *vm.EVM, from common.Address, to common.Ad
 
 // CaptureEnd is called after the call finishes to finalize the tracing.
 func (t *callTracer) CaptureEnd(output []byte, gasUsed uint64, err error) {
+	// Store gas used before refunds
+	t.callstack[0].RequiredGas = gasUsed
 	t.callstack[0].processOutput(output, err)
 }
 
@@ -229,6 +232,8 @@ func (t *callTracer) CaptureExit(output []byte, gasUsed uint64, err error) {
 	size -= 1
 
 	call.GasUsed = gasUsed
+	// Store gas used before refunds
+	call.RequiredGas = gasUsed
 	call.processOutput(output, err)
 	t.callstack[size-1].Calls = append(t.callstack[size-1].Calls, call)
 }
