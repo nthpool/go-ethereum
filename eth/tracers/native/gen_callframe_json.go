@@ -20,6 +20,7 @@ func (c callFrame) MarshalJSON() ([]byte, error) {
 		From         common.Address  `json:"from"`
 		Gas          hexutil.Uint64  `json:"gas"`
 		GasUsed      hexutil.Uint64  `json:"gasUsed"`
+		RequiredGas  uint64          `json:"requiredGas" rlp:"optional"`
 		To           *common.Address `json:"to,omitempty" rlp:"optional"`
 		Input        hexutil.Bytes   `json:"input" rlp:"optional"`
 		Output       hexutil.Bytes   `json:"output,omitempty" rlp:"optional"`
@@ -35,6 +36,7 @@ func (c callFrame) MarshalJSON() ([]byte, error) {
 	enc.From = c.From
 	enc.Gas = hexutil.Uint64(c.Gas)
 	enc.GasUsed = hexutil.Uint64(c.GasUsed)
+	enc.RequiredGas = c.RequiredGas
 	enc.To = c.To
 	enc.Input = c.Input
 	enc.Output = c.Output
@@ -54,6 +56,7 @@ func (c *callFrame) UnmarshalJSON(input []byte) error {
 		From         *common.Address `json:"from"`
 		Gas          *hexutil.Uint64 `json:"gas"`
 		GasUsed      *hexutil.Uint64 `json:"gasUsed"`
+		RequiredGas  *uint64         `json:"requiredGas" rlp:"optional"`
 		To           *common.Address `json:"to,omitempty" rlp:"optional"`
 		Input        *hexutil.Bytes  `json:"input" rlp:"optional"`
 		Output       *hexutil.Bytes  `json:"output,omitempty" rlp:"optional"`
@@ -78,6 +81,9 @@ func (c *callFrame) UnmarshalJSON(input []byte) error {
 	}
 	if dec.GasUsed != nil {
 		c.GasUsed = uint64(*dec.GasUsed)
+	}
+	if dec.RequiredGas != nil {
+		c.RequiredGas = *dec.RequiredGas
 	}
 	if dec.To != nil {
 		c.To = dec.To
