@@ -46,7 +46,7 @@ type callFrame struct {
 	From         common.Address  `json:"from"`
 	Gas          uint64          `json:"gas"`
 	GasUsed      uint64          `json:"gasUsed"`
-	RequiredGas  uint64          `json:"requiredGas" rlp:"optional"`
+	RequiredGas  uint64          `json:"requiredGas,omitempty" rlp:"optional"`
 	To           *common.Address `json:"to,omitempty" rlp:"optional"`
 	Input        []byte          `json:"input" rlp:"optional"`
 	Output       []byte          `json:"output,omitempty" rlp:"optional"`
@@ -90,12 +90,13 @@ func (f *callFrame) processOutput(output []byte, err error) {
 }
 
 type callFrameMarshaling struct {
-	TypeString string `json:"type"`
-	Gas        hexutil.Uint64
-	GasUsed    hexutil.Uint64
-	Value      *hexutil.Big
-	Input      hexutil.Bytes
-	Output     hexutil.Bytes
+	TypeString  string `json:"type"`
+	Gas         hexutil.Uint64
+	GasUsed     hexutil.Uint64
+	Value       *hexutil.Big
+	Input       hexutil.Bytes
+	Output      hexutil.Bytes
+	RequiredGas hexutil.Uint64
 }
 
 type callTracer struct {
